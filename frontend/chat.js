@@ -6,7 +6,12 @@
 
 "use strict";
 
-const API_BASE = "http://localhost:5000/api";
+const isLocalDev =
+  location.protocol === "file:" ||
+  location.hostname === "localhost" ||
+  location.hostname === "127.0.0.1";
+
+const API_BASE = window.API_BASE_URL || (isLocalDev ? "http://localhost:5000/api" : "/api");
 
 // DOM references
 const chatMessages       = document.getElementById("chat-messages");

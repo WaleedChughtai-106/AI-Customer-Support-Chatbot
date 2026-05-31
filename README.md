@@ -157,6 +157,41 @@ Open `frontend/index.html` in your browser.
 
 ---
 
+## Deploying the backend to Render
+
+Render is the better fit for the Flask app in this project. The repo includes a `render.yaml` blueprint for a single web service that serves both the API and the frontend.
+
+### What gets deployed
+
+- The Flask app runs as a Render web service.
+- The same service serves `frontend/index.html`, `frontend/style.css`, and `frontend/chat.js`.
+
+### Required environment variables
+
+Set these in the Render service settings:
+
+- `FLASK_SECRET_KEY`
+- `SUPABASE_URL`
+- `SUPABASE_KEY`
+- `MODEL_TYPE` (`nb`, `knn`, or `ann`)
+
+### Deployment steps
+
+1. Push the repository to GitHub.
+2. Create a new Render Web Service from the repo or apply the `render.yaml` blueprint.
+3. Add the environment variables above.
+4. Deploy the service.
+
+If you open `frontend/index.html` locally, it still falls back to `http://localhost:5000/api`.
+
+### Notes
+
+- The backend expects the trained model files to be present in `backend/saved_models/`.
+- Render installs the Python dependencies from `requirements.txt` and downloads the NLTK corpora during build.
+- If the ANN bundle is too heavy or unavailable, use `MODEL_TYPE=nb` or `MODEL_TYPE=knn`.
+
+---
+
 ## Model Performance (Test Set — 3,231 samples)
 
 | Metric    | Naive Bayes | ANN (MLP) |

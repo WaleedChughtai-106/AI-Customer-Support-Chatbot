@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: ai-chatbot-backend
+    runtime: python
+    plan: free
+    buildCommand: python -m pip install -r requirements.txt && python -m nltk.downloader punkt punkt_tab stopwords wordnet
+    startCommand: gunicorn backend.app:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
