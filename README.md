@@ -157,14 +157,17 @@ Open `frontend/index.html` in your browser.
 
 ---
 
-## Deploying the backend to Render
+## Deploying frontend on Vercel and backend on Render
 
-Render is the better fit for the Flask app in this project. The repo includes a `render.yaml` blueprint for a single web service that serves both the API and the frontend.
+This repo is configured for a split deployment:
+
+- Render hosts the Flask API.
+- Vercel hosts the static frontend and rewrites `/api/*` requests to the Render backend.
 
 ### What gets deployed
 
 - The Flask app runs as a Render web service.
-- The same service serves `frontend/index.html`, `frontend/style.css`, and `frontend/chat.js`.
+- The frontend is served from the `frontend/` directory on Vercel.
 
 ### Required environment variables
 
@@ -179,8 +182,11 @@ Set these in the Render service settings:
 
 1. Push the repository to GitHub.
 2. Create a new Render Web Service from the repo or apply the `render.yaml` blueprint.
-3. Add the environment variables above.
-4. Deploy the service.
+3. Add the environment variables above on Render.
+4. Deploy the Render backend and copy its public URL if it differs from `https://ai-chatbot-backend.onrender.com`.
+5. Import the same repository into Vercel as a separate project.
+6. Make sure [vercel.json](vercel.json) points `/api/*` to the Render backend URL.
+7. Deploy the Vercel frontend.
 
 If you open `frontend/index.html` locally, it still falls back to `http://localhost:5000/api`.
 
@@ -189,6 +195,7 @@ If you open `frontend/index.html` locally, it still falls back to `http://localh
 - The backend expects the trained model files to be present in `backend/saved_models/`.
 - Render installs the Python dependencies from `requirements.txt` and downloads the NLTK corpora during build.
 - If the ANN bundle is too heavy or unavailable, use `MODEL_TYPE=nb` or `MODEL_TYPE=knn`.
+- If the Render service URL changes, update the proxy destination in [vercel.json](vercel.json).
 
 ---
 

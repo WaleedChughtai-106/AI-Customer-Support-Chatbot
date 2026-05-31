@@ -20,7 +20,7 @@ import os
 import sys
 from typing import Any
 
-from flask import Flask, request, jsonify, Response, send_from_directory
+from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -29,9 +29,6 @@ from config import config
 from predictor import predict
 from response_map import get_response
 from history import save_message, get_history, search_messages
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -43,20 +40,6 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.secret_key = config.flask_secret_key
 CORS(app, resources={r"/api/*": {"origins": "*"}})
-
-
-@app.route("/", methods=["GET"])
-def frontend_index() -> Response:
-    return send_from_directory(FRONTEND_DIR, "index.html")
-
-
-@app.route("/<path:filename>", methods=["GET"])
-def frontend_assets(filename: str) -> Response:
-    file_path = os.path.join(FRONTEND_DIR, filename)
-    if os.path.isfile(file_path):
-        return send_from_directory(FRONTEND_DIR, filename)
-
-    return send_from_directory(FRONTEND_DIR, "index.html")
 
 
 @app.route("/api/health", methods=["GET"])
